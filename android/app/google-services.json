@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "236130516124",
+    "project_id": "cmsnotify-2880b",
+    "storage_bucket": "cmsnotify-2880b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236130516124:android:62c04d2166fe3945940159",
+        "android_client_info": {
+          "package_name": "com.cmsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236130516124-uoiknrp4tf9e6uj3b7acia6cbtd11e67.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPENIvNsiljUOHjOMNIEJ48PaFqfiVJRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236130516124-uoiknrp4tf9e6uj3b7acia6cbtd11e67.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
