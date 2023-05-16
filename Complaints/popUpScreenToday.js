@@ -11,8 +11,6 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-import Icon from 'react-native-vector-icons/Ionicons';
-
 import { BackHandler } from 'react-native';
 
 const API_URL =

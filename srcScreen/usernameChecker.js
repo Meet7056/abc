@@ -22,7 +22,6 @@ export default function App({ navigation }) {
             const username = await AsyncStorage.getItem('username');
 
             if (username) {
-
                 navigation.navigate('Main');
             }else{
                 navigation.navigate('Login')

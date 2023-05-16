@@ -5,13 +5,11 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
-  Button,
+  Image,
   TouchableOpacity
 } from 'react-native';
 import axios from 'axios';
 import { BackHandler } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyHome = ({ navigation }) => {
@@ -79,21 +77,32 @@ const MyHome = ({ navigation }) => {
               <TouchableOpacity onPress={() => navigation.navigate('Pending Complaints')} >
 
                 <View style={styles.card} key={index}>
-                  <View style={styles.iconR}>
-                    {item.isCompleted === 'Review' ? (
+                <View style={styles.iconR}>
+                  {item.isCompleted == 'Review' ? (
+                    <>
                       <View style={styles.lineOncard}>
-                        <Ionicons name="warning" size={24} color="black" />
+                        <Image
+                          source={require('../icons/warning.png')}
+                          style={{ height: 17, width: 17 }}
+                        />
                       </View>
-                    ) : item.isCompleted === 'Completed' ? (
-                      <View style={styles.lineOncardGreen}>
-                        <AntDesign name="checkcircle" size={24} color="black" />
-                      </View>
-                    ) : (
-                      <View style={styles.lineOncardRed}>
-                        <Ionicons name="alert-circle" size={24} color="black" />
-                      </View>
-                    )}
-                  </View>
+                    </>
+                  ) : item.isCompleted == 'Completed' ? (
+                    <View style={styles.lineOncardGreen}>
+                      <Image
+                        source={require('../icons/completeIcon.png')}
+                        style={{ height: 17, width: 17 }}
+                      />
+                    </View>
+                  ) : (
+                    <View style={styles.lineOncardRed}>
+                      <Image
+                        source={require('../icons/pending.png')}
+                        style={{ height: 17, width: 17 }}
+                      />
+                    </View>
+                  )}
+                </View>
 
                   <View style={styles.cardHeader}>
                     <Text style={styles.cardHeaderText}>{item.partyName}</Text>

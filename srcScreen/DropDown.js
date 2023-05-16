@@ -49,7 +49,12 @@ export default function App() {
         setLatitude(latitude);
         setLongitude(longitude);
       },
-      error => console.log(error)
+      (error) => {
+        if (error.code === 2) {
+             //Show alert or something here that GPS need to turned on.
+             Alert.alert("Turn On Location!")
+          }
+      },
     );
   }, []);
 
@@ -164,7 +169,7 @@ export default function App() {
           (
             <View style={[styles.actionBtnText, { marginRight: 50, marginLeft: 3, }]}>
 
-              <Text style={{ fontWeight: 'bold',color:"black",paddingHorizontal: 0, }}>   {genderValue}   </Text>
+              <Text style={{ fontWeight: 'bold', color: "black", paddingHorizontal: 0, }}>   {genderValue}   </Text>
             </View>
           ) :
           (
@@ -181,7 +186,14 @@ export default function App() {
           animationType="fade"
           onRequestClose={toggleModal}>
           <View style={styles.modal}>
-            <View style={[styles.container, { backgroundColor: 'white' }]}>
+            <View style={{ marginBottom: -100 }}>
+              <Image
+                style={{ width: 350, height: 350 }}
+                source={require('../assets/punchInGif.gif')}
+              />
+            </View>
+            <View style={[styles.container]}>
+
               <View>
                 <Controller
                   name="gender"
@@ -208,8 +220,24 @@ export default function App() {
                 />
               </View>
 
-              <TouchableOpacity onPress={onSubmit} style={{ width: 70 }}>
-                <Text style={styles.getStarted}>Submit</Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#0E24A5',
+                  padding: 10,
+                  borderRadius: 5,
+                  margin: 15,
+                  width: 150,
+                  alignItems: "center"
+                }}
+                onPress={onSubmit}>
+                {genderValue ?
+                    (
+                      <Text style={{fontWeight:"bold", color:"white"}}>{genderValue} now!</Text>
+                    ) :
+                    (
+                      <Text style={{fontWeight:"bold", color:"white"}}>Submit</Text>
+
+                    )}
               </TouchableOpacity>
             </View>
           </View>
@@ -267,6 +295,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    width:100,
+    width: 100,
   },
 });

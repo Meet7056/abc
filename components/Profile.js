@@ -80,8 +80,8 @@ export default function Profile({ navigation }) {
           elevation: 7,
         }}>
         <Image
-          style={{ width: 120, height: 120 }}
-          source={require('../assets/ProfileDP.png')}
+          style={{ width: 130, height: 130, margin: 10 }}
+          source={require('../assets/profileDpGif.gif')}
         />
         <View style={{ alignItems: 'flex-end' }}>
           {engId && <Text style={styles.nameHeadingId}>{engId}</Text>}
@@ -124,12 +124,12 @@ export default function Profile({ navigation }) {
         <View>
           <Image
             source={require('../icons/expertIcon.png')}
-            style={[styles.icon,{marginTop:-30}]}
+            style={[styles.icon, { marginTop: -30 }]}
           />
         </View>
         <View
           name={'expertise'}
-          >
+        >
           <Text style={{ opacity: 0.7, marginTop: 10 }}>
             Engineer Expertise
           </Text>

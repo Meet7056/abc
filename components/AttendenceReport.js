@@ -9,8 +9,6 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
-import { Entypo } from '@expo/vector-icons';
-
 import axios from 'axios';
 
 import moment from 'moment';
@@ -125,13 +123,6 @@ export default function App({navigation}) {
               <Text style={{color:'black'}}>
                 {selectedDate}
               </Text>
-            </View>
-            <View style={styles.cross}>
-              <TouchableOpacity onPress={handleClose}>
-                <View style={{ width: 25, height: 25 }}>
-                  <Entypo name="squared-cross" size={24} color="black" />
-                </View>
-              </TouchableOpacity>
             </View>
             {filteredData != 0 ? (
               <View

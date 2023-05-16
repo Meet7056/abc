@@ -17,13 +17,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App({ navigation }) {
 
+    const [loggedIn, setLoggedIn] = useState(false);
+
     useEffect(() => {
         const checkLoginStatus = async () => {
             const username = await AsyncStorage.getItem('username');
 
-            if (username) {
 
+            
+            if (username) {
+                
+                console.log(username)
                 navigation.navigate('Main');
+            }else{
+                console.log("not found ")
             }
         };
 
