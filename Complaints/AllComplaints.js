@@ -10,7 +10,8 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
-  Image
+  Image,
+  RefreshControl
 } from 'react-native';
 
 import axios from 'axios';
@@ -25,6 +26,7 @@ const App = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [name, setUsername] = useState('');
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const showDatePicker = useCallback(() => {
     setIsDatePickerVisible(true);
@@ -47,6 +49,11 @@ const App = ({ navigation }) => {
       console.log(error);
     }
   }, []);
+
+  // for refresh
+
+  
+  
 
   useEffect(() => {
     getUsername();
@@ -85,6 +92,7 @@ const App = ({ navigation }) => {
   }, []);
 
   const fetchData = useCallback(async () => {
+    console.log("fetchdata")
     setLoading(true);
     try {
       const response = await axios.post(
@@ -107,12 +115,26 @@ const App = ({ navigation }) => {
     debouncedFetchData();
   }, [formattedDate, debouncedFetchData]);
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    console.log("Refresh Calling...")
+    setTimeout(() => {
+      setRefreshing(false);
+      fetchData();
+    }, 2000);
+  }
+
 
   // --------------------------------------------------------------------------------
 
   return (
 
-    <ScrollView>
+    <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }>
       <View style={styles.container}>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 1, flexDirection: "row", marginBottom: 10 }}>
@@ -152,7 +174,7 @@ const App = ({ navigation }) => {
             style={styles.indicator}
           />
         ) : (
-          <Text style={{ display: 'none' }}>{''}</Text>
+          <Text style={{ display: 'none' }}>No Compalints Found</Text>
         )}
 
         {filteredData.length == 0 ? (

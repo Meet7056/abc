@@ -6,10 +6,8 @@ import {
   StyleSheet,
   Text,
   ScrollView,
-  ActivityIndicator,
-  BackHandler,
-  Alert,
-  Image
+  Image,
+  RefreshControl
 } from 'react-native';
 
 import Dropdown from './DropDown';
@@ -30,6 +28,36 @@ export default function MyHome({ navigation }) {
 
   // retrieve name from async storage
   const [username, setUsername] = useState('');
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    console.log("Refresh Calling...")
+      axios
+        .post('https://cms-sparrow.herokuapp.com/eng-apk-api/engineer_count', {
+          name: username,
+        })
+        .then((response) => {
+          if (response.data.statusCode == 200) {
+            setAllCompaint(response.data.allCompaint);
+            setPendingCompaint(response.data.pendingCompaint);
+            setReviewCompaint(response.data.reviewCompaint);
+            setCompletedCompaint(response.data.completedCompaint);
+            setRepeatingCompaint(response.data.repeatingCompaint);
+            setTodayCompaint(response.data.TodayComplaint);
+            setLoading(false)
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   useEffect(() => {
     // Retrieve the user's name from AsyncStorage
@@ -92,107 +120,116 @@ export default function MyHome({ navigation }) {
   // UI
 
   return (
+    <View style={{
+      flex: 1, width: "100%", height: "100%"
+    }}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        style={styles.scrollviewStyle}>
+        <View style={styles.cardContainer}>
+          <View style={styles.card1}>
+            <TouchableOpacity onPress={handleAllComp}>
+              <View style={styles.cardContent}>
+                <Image
+                  source={require('../icons/allIcon.png')}
+                  style={styles.cardIconGreen}
+                />
+                <Text style={styles.cardText1Green}> {allCompaint} </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={styles.cardText1Green}>
+                <Text style={styles.cardTextGreen}>All Complaints</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
-    <View style={{ flex: 1, }}>
-      <View style={styles.cardContainer}>
-        <View style={styles.card1}>
-          <TouchableOpacity onPress={handleAllComp}>
-            <View style={styles.cardContent}>
-              <Image
-                source={require('../icons/allIcon.png')}
-                style={styles.cardIconGreen}
-              />
-              <Text style={styles.cardText1Green}> {allCompaint} </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.cardText1Green}>
-              <Text style={styles.cardTextGreen}>All Complaints</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.card2}>
+            <TouchableOpacity onPress={handlePendingComp}>
+              <View style={styles.cardContent}>
+                <Image
+                  source={require('../icons/pendingIcon.png')}
+                  style={styles.cardIcon}
+                />
+                <Text style={styles.cardText1}> {pendingCompaint} </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={styles.cardText1}>
+                <Text style={styles.cardText}>Pending Complaints</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.card2}>
-          <TouchableOpacity onPress={handlePendingComp}>
-            <View style={styles.cardContent}>
-              <Image
-                source={require('../icons/pendingIcon.png')}
-                style={styles.cardIcon}
-              />
-              <Text style={styles.cardText1}> {pendingCompaint} </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
+          <View style={styles.card2}>
+            <TouchableOpacity onPress={reviewPendingComp}>
+              <View style={styles.cardContent}>
+                <Image
+                  source={require('../icons/reviewIcon.png')}
+                  style={styles.cardIconGreen}
+                />
+                <Text style={styles.cardText1}> {reviewCompaint} </Text>
+              </View>
+            </TouchableOpacity>
             <View style={styles.cardText1}>
-              <Text style={styles.cardText}>Pending Complaints</Text>
+              <Text style={styles.cardText}>Review Complaints</Text>
             </View>
-          </TouchableOpacity>
-        </View>
+          </View>
 
-        <View style={styles.card2}>
-          <TouchableOpacity onPress={reviewPendingComp}>
-            <View style={styles.cardContent}>
-              <Image
-                source={require('../icons/reviewIcon.png')}
-                style={styles.cardIconGreen}
-              />
-              <Text style={styles.cardText1}> {reviewCompaint} </Text>
+          <View style={styles.card1}>
+            <TouchableOpacity onPress={completePendingComp}>
+              <View style={styles.cardContent}>
+                <Image
+                  source={require('../icons/completeIcon.png')}
+                  style={styles.cardIcon}
+                />
+                <Text style={styles.cardText1Green}> {completedCompaint} </Text>
+              </View>
+            </TouchableOpacity>
+            <View style={styles.cardText1Green}>
+              <Text style={styles.cardTextGreen}>Completed Complaint</Text>
             </View>
-          </TouchableOpacity>
-          <View style={styles.cardText1}>
-            <Text style={styles.cardText}>Review Complaints</Text>
+          </View>
+
+          <View style={styles.card1}>
+            <TouchableOpacity onPress={repeatPendingComp}>
+              <View style={styles.cardContent}>
+                <Image
+                  source={require('../icons/repeatIcon.png')}
+                  style={styles.cardIcon}
+                />
+                <Text style={styles.cardText1Green}> {repeatingCompaint} </Text>
+              </View>
+            </TouchableOpacity>
+            <View style={styles.cardText1Green}>
+              <Text style={styles.cardTextGreen}>Repeating Complaints</Text>
+            </View>
+          </View>
+
+          <View style={styles.card2}>
+            <TouchableOpacity onPress={todayPendingComp}>
+              <View style={styles.cardContent}>
+                <Image
+                  source={require('../icons/todayIcon.png')}
+                  style={styles.cardIcon}
+                />
+                <Text style={styles.cardText1}> {todayComplaint} </Text>
+              </View>
+            </TouchableOpacity>
+            <View style={styles.cardText1}>
+              <Text style={styles.cardText}>Today Complaints</Text>
+            </View>
           </View>
         </View>
-
-        <View style={styles.card1}>
-          <TouchableOpacity onPress={completePendingComp}>
-            <View style={styles.cardContent}>
-              <Image
-                source={require('../icons/completeIcon.png')}
-                style={styles.cardIcon}
-              />
-              <Text style={styles.cardText1Green}> {completedCompaint} </Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.cardText1Green}>
-            <Text style={styles.cardTextGreen}>Completed Complaint</Text>
-          </View>
+      </ScrollView>
+        <View style={{ marginBottom: 10, flexDirection: 'row', justifyContent: "flex-end", alignItems: "flex-end", marginLeft: "75%" }}>
+          <Dropdown />
         </View>
-
-        <View style={styles.card1}>
-          <TouchableOpacity onPress={repeatPendingComp}>
-            <View style={styles.cardContent}>
-              <Image
-                source={require('../icons/repeatIcon.png')}
-                style={styles.cardIcon}
-              />
-              <Text style={styles.cardText1Green}> {repeatingCompaint} </Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.cardText1Green}>
-            <Text style={styles.cardTextGreen}>Repeating Complaints</Text>
-          </View>
-        </View>
-
-        <View style={styles.card2}>
-          <TouchableOpacity onPress={todayPendingComp}>
-            <View style={styles.cardContent}>
-              <Image
-                source={require('../icons/todayIcon.png')}
-                style={styles.cardIcon}
-              />
-              <Text style={styles.cardText1}> {todayComplaint} </Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.cardText1}>
-            <Text style={styles.cardText}>Today Complaints</Text>
-          </View>
-        </View>
-      </View>
-      <View style={{ marginBottom: 10, flexDirection: 'row', justifyContent: "flex-end", alignItems: "flex-end", marginLeft:"75%" }}>
-        <Dropdown />
-      </View>
-    </View>
+    </View >
   );
 }
 
@@ -205,6 +242,11 @@ const styles = StyleSheet.create({
   },
   loaderContainer: {
     marginTop: 20
+  },
+  scrollviewStyle: {
+    flex: 1,
+    height: "100%",
+    width: "100%",
   },
   card1: {
     margin: "4%",

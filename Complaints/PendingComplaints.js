@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   Image,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import axios from 'axios';
 import { BackHandler } from 'react-native';
@@ -17,6 +18,7 @@ const MyHome = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [name, setUsername] = useState('');
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -62,8 +64,35 @@ const MyHome = ({ navigation }) => {
       });
   }, [name]);
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    console.log("Refresh Calling...")
+    setTimeout(() => {
+      setRefreshing(false);
+      axios
+        .post(
+          'https://cms-sparrow.herokuapp.com/eng-apk-api/engineer_padding_compaint',
+          {
+            name: name,
+          }
+        )
+        .then((response) => {
+          setData(response.data.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 2000);
+  }
+
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
       {loading ? (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -78,7 +107,7 @@ const MyHome = ({ navigation }) => {
           renderItem={({ item, index }) => (
             <TouchableOpacity onPress={() => navigation.navigate('TodayStartComplaint', { item })} >
               <View style={styles.card} key={index}>
-              <View style={styles.iconR}>
+                <View style={styles.iconR}>
                   {item.isCompleted == 'Review' ? (
                     <>
                       <View style={styles.lineOncard}>

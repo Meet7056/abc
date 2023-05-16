@@ -6,7 +6,8 @@ import {
   ScrollView,
   ActivityIndicator,
   FlatList,
-  Image
+  Image,
+  RefreshControl
 } from 'react-native';
 import axios from 'axios';
 import { BackHandler } from 'react-native';
@@ -16,6 +17,7 @@ const MyHome = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [name, setUsername] = useState('');
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -60,10 +62,36 @@ const MyHome = ({ navigation }) => {
         console.log(error);
       });
   }, [name]);
+  const onRefresh = () => {
+    setRefreshing(true);
+    console.log("Refresh Calling...")
+    setTimeout(() => {
+      setRefreshing(false);
+      axios
+      .post(
+        'https://cms-sparrow.herokuapp.com/eng-apk-api/find_engineer_name_complaint_data',
+        {
+          name: name,
+        }
+      )
+      .then((response) => {
+        setData(response.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }, 2000);
+  }
 
   return (
 
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
       {loading ? (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -74,8 +102,9 @@ const MyHome = ({ navigation }) => {
 
       <>
         {data.length == 0 ? (
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text>Complaints not Found!</Text>
+          <View style={{ marginTop:"85%",
+          alignItems:"center" }}>
+            <Text >Complaints not Found!</Text>
           </View>
         ) : (
           <View style={styles.container}>
